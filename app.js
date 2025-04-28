@@ -1,27 +1,27 @@
 // تحميل المتغيرات البيئية من ملف .env
 require("dotenv").config();
 
-// استدعاء مكتبات Express و Session و Cookie Parser و Path
+
 const express = require("express");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-const users = require("./data/users"); // بيانات المستخدمين
+const users = require("./data/users"); 
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// تعريف الوسطاء (Middlewares)
-app.use(express.urlencoded({ extended: true })); // لتحليل بيانات النماذج (Forms)
-app.use(cookieParser()); // تحليل الكوكيز
-app.use(express.static(path.join(__dirname, "public"))); // تقديم الملفات الثابتة (CSS, JS, صور)
+
+app.use(express.urlencoded({ extended: true })); 
+app.use(cookieParser()); 
+app.use(express.static(path.join(__dirname, "public"))); // تقديم الملفات الثابتة 
 app.use(session({
-    secret: "super-secret", // مفتاح التشفير للجلسات
+    secret: "super-secret", 
     resave: false,
     saveUninitialized: true,
 }));
 
-// تحديد محرك القوالب EJS
+
 app.set("view engine", "ejs");
 
 // وسيط مخصص: لمنع الوصول لمسارات معينة
@@ -30,8 +30,7 @@ app.use((req, res, next) => {
     const originalHeader = req.get("X-Original-URL");
 
     if (restrictedPaths.includes(req.path)) {
-        return res.status(403).render("blocked"); // إرجاع صفحة الحظر
-    }
+        return res.status(403).render("blocked"); 
 
     if (originalHeader) {
         req.url = originalHeader;
@@ -40,12 +39,12 @@ app.use((req, res, next) => {
     next();
 });
 
-// المسار الرئيسي
+
 app.get("/", (req, res) => {
     res.render("index", { user: req.session.username });
 });
 
-// تسجيل الدخول
+
 app.route("/login")
     .get((req, res) => {
         res.render("login", { error: null });
@@ -63,7 +62,7 @@ app.route("/login")
         res.render("login", { error: "بيانات الدخول غير صحيحة" });
     });
 
-// تسجيل مستخدم جديد
+
 app.route("/register")
     .get((req, res) => {
         res.render("register", { error: null });
@@ -83,7 +82,7 @@ app.route("/register")
         res.redirect("/login");
     });
 
-// صفحة حساب المستخدم
+
 app.get("/myaccount", (req, res) => {
     if (!req.session.username) {
         return res.redirect("/login"); // إعادة التوجيه إلى تسجيل الدخول إذا لم يتم تسجيل الدخول
@@ -95,14 +94,14 @@ app.get("/myaccount", (req, res) => {
     });
 });
 
-// تسجيل الخروج
+
 app.get("/logout", (req, res) => {
     req.session.destroy(() => {
         res.redirect("/");
     });
 });
 
-// لوحة تحكم المشرف
+
 app.get("/admin", (req, res) => {
     if (req.session.role === "admin") {
         return res.render("admin");
@@ -110,7 +109,7 @@ app.get("/admin", (req, res) => {
     res.status(403).render("blocked"); // إذا لم يكن أدمن يتم حظره
 });
 
-// حذف مستخدم (خاص بالمشرف)
+
 app.get("/admin/delete", (req, res) => {
     const username = req.query.username;
 
