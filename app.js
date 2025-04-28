@@ -59,7 +59,7 @@ app.route("/login")
             return res.redirect("/myaccount"); // تحويل للمستخدم إلى حسابه
         }
 
-        res.render("login", { error: "بيانات الدخول غير صحيحة" });
+        res.render("login", { error: "Incorrect login details" });
     });
 
 
@@ -72,7 +72,7 @@ app.route("/register")
         const existingUser = users.find(u => u.username === username);
 
         if (existingUser) {
-            return res.render("register", { error: "المستخدم موجود بالفعل" });
+            return res.render("register", { error: "user already exists" });
         }
 
         const validRoles = ["admin", "user"];
