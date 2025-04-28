@@ -120,7 +120,7 @@ app.get("/admin/delete", (req, res) => {
     res.render("delete", { deleted: true, deletedUser: username });
 });
 
-// تشغيل الخادم
+
 app.listen(PORT, () => {
-    console.log(`الخادم يعمل على الرابط: http://localhost:${PORT}`);
+    console.log(`Server running at: http://localhost:${PORT}`);
 });
